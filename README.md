@@ -1,35 +1,93 @@
-# 人物专注性检测
+- TestCman.py：用于测试摄像头
 
-## 项目快速预览
+# Jetson NX 环境配置速通
 
-![快速预览](images/1620298460804.gif?raw=true"快速预览")
-## 1.0版本
-在征得原作者的同意之后，进行了部分修改，得到V1.0版本
+> 非常适合有一点部署经验的同学，但是个人感觉对于新生也十分友好
 
-主要不同地方为：
+## SD卡烧录
 
-1、疲劳检测中去掉了点头行为的检测，仅保留闭眼检测和打哈欠检测。
+随便搜一个教程，去官网上下载。
 
-2、Yolov5的权重进行了重新训练，增加了训练轮次。
+我是直接使用Arch进行镜像的烧录，一开始使用NVIDIA的SDK Manager，不知道为什么识别不到设备。
 
-3、前端UI进行了修改，精简了部分功能。
 
-## 项目介绍
-该项目为人物专注性检测，分为两个检测部分，疲劳检测和分心行为检测。
-疲劳检测部分，使用Dlib进行人脸关键点检测，然后通过计算眼睛和嘴巴的开合程度来判断是存在否闭眼或者打哈欠，并使用Perclos模型计算疲劳程度。
-分心行为检测部分，使用Yolov5，检测是否存在玩手机、抽烟、喝水这三种行为。
 
-## 使用方法
-依赖：YoloV5、Dlib、PySide2
+## 环境配置
 
-直接运行main.py，即可使用本程序，具体效果可以观看演示视频。
+烧录好之后直接设置最大功率20W 6core，然后开始升级系统：
 
-[bilibili在线观看](https://www.bilibili.com/video/BV1MK4y1d7a8/)
+```python
+sudo apt update
+sudo apt upgrade
+```
 
-各函数的信息，均在代码中写好了注释，如有疑问请联系1647790440@qq.com
+去搜索安装Jtop，pip3
 
-## 致谢
-十分感谢原作者的支持和帮助，本项目很大部分都基于源项目，项目所使用的数据集也由原作者提
+[(17条消息) Jetson Xavier NX 安装 jtop指导手册_GNNUXXL的博客-CSDN博客_nx安装jtop](https://blog.csdn.net/GNNUXXL/article/details/119246587)
 
-供。
+安装东西的时候建议直接开风扇，make的时候指定线程（make -j 6）可以安装快一点。
 
+建议先安装PySide2和Dlib，其他的比较简单。
+
+## SSH
+
+让Jetson NX与电脑在一个局域网内，然后直接用SSH，就可以使用电脑连接Jetson NX。
+
+连接之后就可以使用scp传文件或者SSH连接，网络不好的时候方便传文件或者远程控制。
+
+## PySide2
+
+![image-20221030001526919](C:/Users/BlackFriday/AppData/Roaming/Typora/typora-user-images/image-20221030001526919.png)
+
+版本对齐很重要，踩了一堆坑之后使用这个repo的whl，两句话安好:
+
+[chentongwilliam/PySide2-jetson-nano: PySide2 5.15.3 whl files for jetson nano (github.com)](https://github.com/chentongwilliam/PySide2-jetson-nano)
+
+这边提一嘴，Ubantu的版本会影响Qt的版本，PySide2好像会调用系统里面的Qt动态链接库，然后不同的Ubantu版本会有影响
+
+```
+sudo apt-get install qt5-default
+pip3 install PySide2-5.9.0a1-5.9.5-cp36-cp36m-linux_aarch64.whl
+```
+
+Success：
+
+```python
+from PySide2 import *
+# import PySide2  不算成功
+```
+
+## Dlib
+
+去github上搜Dlib,git clone 下来，直接:
+
+```python
+python3 setup.py install
+```
+
+
+
+## Pytorch && Torchvison
+
+根据NVIDIA的论坛进行，上面有严格的版本对照。
+
+由于我们的Python是3.6.9所以选好对应的版本进行
+
+
+
+## 其他包
+
+如果慢的话可以pip换一下源
+
+```python
+pip install -r requirement.txt
+```
+
+# 最后
+
+以前配过Deepstream6.0,搞目标跟踪啥的，那个时候一个人搞啥都不懂，弄的死去活来的。这次部署疲劳检测，在PySide2上踩了好几天的坑，一直在走弯路，但是非常感谢学长也来帮我修Bug安包，让我学会了很多。
+
+- 网上的教程不一定是最优最快的：比如安装某个包，有的时候一搜索都要install 源码去build，然后再改环境变量，耗时费力，还容易产生冲突。可以直接用apt 去search，有的时候能直接找到。
+- 安包的时候也可以去github或者官网上找找，每个包对应的仓库一般都会有最权威的安装教程（当然也可以配合别人的教程食用）
+- 还有不要乱删动态连接库。。。
+- 如果能找到别人build好的wheel，建议直接pip install whell，真的可以方便非常多。就像我install PySide2一样，这玩意卡了我几天，结果两句话就能解决呜呜┭┮﹏┭┮。
