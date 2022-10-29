@@ -1,0 +1,11 @@
+tqdm
+opencv-python
+pyside2
+requests
+pyyaml
+matplotlib
+pandas
+seaborn
+imutils
+dlib
+scipy
