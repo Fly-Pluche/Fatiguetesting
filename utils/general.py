@@ -13,7 +13,6 @@ from pathlib import Path
 
 import cv2
 import numpy as np
-import torchCamConfig_initCamConfig_initCamConfig_init
 import torchvision
 import yaml
 

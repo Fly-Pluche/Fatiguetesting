@@ -1,5 +1,4 @@
 # 主函数
-import json
 import sys
 import time
 
@@ -19,25 +18,10 @@ server_url = "https://www.xqstudy.top"
 get_id_url = server_url + "/userInfo/getId"
 upload_url = server_url + "/pic/upload"
 
-# 定义传输危险行为的图片
-def post_img_para(danger_type, img_path, user_id):
-    img_path = "./" + img_path
-    timestamp = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime())
-    files = {'file': (timestamp + '.png', open(img_path, 'rb'))}
-    upload_info = {
-        "id": user_id,
-        "type": danger_type,
-        "time": timestamp
-    }
-    upload_info_res = requests.post(url=upload_url, files=files, params=upload_info)  # 使用表单
-    return upload_info_res.text
-
-
 # 首先从数据库获取当前驾驶员id
 # user_id = json.loads(requests.get(url=get_id_url).text)['data']
 user_id = requests.get(url=get_id_url).text
 print("Current user_id is ", user_id)
-
 
 # 定义变量
 # 眼睛闭合判断
@@ -66,6 +50,20 @@ phone_flag = 0
 Roll = 0  # 整个循环内的帧技术
 Rolleye = 0  # 循环内闭眼帧数
 Rollmouth = 0  # 循环内打哈欠数
+
+
+# 定义传输危险行为的图片
+def post_img_para(danger_type, img_path, user_id):
+    img_path = "./" + img_path
+    timestamp = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime())
+    files = {'file': (timestamp + '.png', open(img_path, 'rb'))}
+    upload_info = {
+        "id": user_id,
+        "type": danger_type,
+        "time": timestamp
+    }
+    upload_info_res = requests.post(url=upload_url, files=files, params=upload_info)  # 使用表单
+    return upload_info_res.text
 
 
 class MainWindow(QMainWindow, Ui_MainWindow):
@@ -150,7 +148,7 @@ class CamConfig:
                     if phone_flag == 0:
                         phone_img_path = r"using_phone.png"
                         cv2.imwrite(phone_img_path, frame)
-                        
+
                         upload_result = post_img_para(danger_type=3, img_path=phone_img_path, user_id=user_id)
                         print("phone upload: ", upload_result)
                         if upload_result == "true":

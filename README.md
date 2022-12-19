@@ -1,4 +1,8 @@
 - TestCman.py：用于测试摄像头
+- execute.py:主程序
+
+主要是运行execute.py，其他的代码不是很确定有没有bug，没有跑过。
+execute.py将检测到的图片传给后端，目前存在bug，没有写异常退出的逻辑代码。用NX跑十几分钟就会卡住。
 
 # Jetson NX 环境配置速通
 
@@ -9,8 +13,6 @@
 随便搜一个教程，去官网上下载。
 
 我是直接使用Arch进行镜像的烧录，一开始使用NVIDIA的SDK Manager，不知道为什么识别不到设备。
-
-
 
 ## 环境配置
 
@@ -65,15 +67,19 @@ from PySide2 import *
 python3 setup.py install
 ```
 
-
-
 ## Pytorch && Torchvison
 
 根据NVIDIA的论坛进行，上面有严格的版本对照。
 
 由于我们的Python是3.6.9所以选好对应的版本进行
 
+直接根据这个forums，选好对应的版本即可。
 
+https://forums.developer.nvidia.com/t/pytorch-for-jetson/72048
+
+torch==1.8.0
+
+pyside2==5.9.0
 
 ## 其他包
 
@@ -91,3 +97,8 @@ pip install -r requirement.txt
 - 安包的时候也可以去github或者官网上找找，每个包对应的仓库一般都会有最权威的安装教程（当然也可以配合别人的教程食用）
 - 还有不要乱删动态连接库。。。
 - 如果能找到别人build好的wheel，建议直接pip install whell，真的可以方便非常多。就像我install PySide2一样，这玩意卡了我几天，结果两句话就能解决呜呜┭┮﹏┭┮。
+- 拍视频的时候可以下载一个kzazm进行录屏。
+
+# 引用
+
+[原README.md](./org_README.md)
