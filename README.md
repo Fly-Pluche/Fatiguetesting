@@ -39,7 +39,7 @@ sudo apt upgrade
 
 ## PySide2
 
-![image-20221030001526919](C:/Users/BlackFriday/AppData/Roaming/Typora/typora-user-images/image-20221030001526919.png)
+![image](https://user-images.githubusercontent.com/73021377/199190556-bc0bf953-7a06-47a4-8fc1-6947e0b04bae.png)
 
 版本对齐很重要，踩了一堆坑之后使用这个repo的whl，两句话安好:
 
